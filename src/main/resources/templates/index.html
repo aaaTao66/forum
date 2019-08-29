@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>极客</title>
+    <title>极客社区</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
@@ -31,16 +31,19 @@
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
-                <!-- 登录跳转到github 连接-->
-                <li><a href="https://github.com/login/oauth/authorize?client_id=77b1cf12c9c9896fa264&redirect_uri=http://localhost:1212/callback&scope=user&state=1">登录</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">我<span class="caret"></span></a>
+                <li class="dropdown" th:if="${session.user != null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" th:text="${session.user.getName()}">我<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">消息中心</a></li>
                         <li><a href="#">个人资料</a></li>
                         <li><a href="#">退出登录</a></li>
                     </ul>
                 </li>
+                <!-- 登录跳转到github 连接-->
+                <li th:unless="not ${session.user == null}">
+                    <a href="https://github.com/login/oauth/authorize?client_id=77b1cf12c9c9896fa264&redirect_uri=http://localhost:1212/callback&scope=user&state=1">登录</a>
+                </li>
+
             </ul>
         </div>
     </div>
