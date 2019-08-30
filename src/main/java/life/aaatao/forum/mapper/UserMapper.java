@@ -3,6 +3,8 @@ package life.aaatao.forum.mapper;
 import life.aaatao.forum.domain.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface UserMapper {
@@ -11,4 +13,6 @@ public interface UserMapper {
     void insert(User user);
 
 
+    @Select("select * from user where token = #{token}")
+    User findByToken(@Param("token") String token);
 }
