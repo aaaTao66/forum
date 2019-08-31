@@ -3,6 +3,7 @@ package life.aaatao.forum.provider;
 
 import com.alibaba.fastjson.JSON;
 import life.aaatao.forum.dto.AccessTokenDTO;
+import life.aaatao.forum.dto.GithubUser;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +34,7 @@ public class GithubProvider {
     }
 
 
-    public AccessTokenDTO.GithubUser getUser(String accessTocken){
+    public GithubUser getUser(String accessTocken){
         OkHttpClient client = new OkHttpClient();
         String url;
         Request request = new Request.Builder()
@@ -44,7 +45,7 @@ public class GithubProvider {
             Response response = client.newCall(request).execute();
             String string = response.body().string();
             //自动转换成 java类 对象
-            AccessTokenDTO.GithubUser githubUser = JSON.parseObject(string, AccessTokenDTO.GithubUser.class);
+            GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
             return githubUser;
         } catch (IOException e) {
         }

@@ -2,6 +2,7 @@ package life.aaatao.forum.controller;
 
 import life.aaatao.forum.domain.User;
 import life.aaatao.forum.dto.AccessTokenDTO;
+import life.aaatao.forum.dto.GithubUser;
 import life.aaatao.forum.mapper.UserMapper;
 import life.aaatao.forum.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,7 @@ public class AuthorizeController {
         accessTokenDTO.setRedirect_uri(redirectUri);
         accessTokenDTO.setState(state);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        AccessTokenDTO.GithubUser githubUser = githubProvider.getUser(accessToken);
+        GithubUser githubUser = githubProvider.getUser(accessToken);
         if (githubUser != null) {
             User user = new User();
             String token = UUID.randomUUID().toString();
@@ -54,8 +55,9 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUser.getId()));
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getAvatar_url());
             userMapper.insert(user);
-            response.addCookie(new Cookie("token",token));
+            response.addCookie(new Cookie("token", token));
             return "redirect:/";
             // 登录成功, 写cookie和session
         } else {
