@@ -65,7 +65,7 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.57</version>
         </dependency>
-
+        <!-- 使用 druid 数据源 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
