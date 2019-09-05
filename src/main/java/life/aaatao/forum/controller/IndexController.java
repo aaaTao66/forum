@@ -4,6 +4,7 @@ package life.aaatao.forum.controller;
 import jdk.nashorn.internal.parser.Token;
 import life.aaatao.forum.domain.Question;
 import life.aaatao.forum.domain.User;
+import life.aaatao.forum.dto.PaginationDTO;
 import life.aaatao.forum.dto.QuestionDTO;
 import life.aaatao.forum.mapper.QuestionMapper;
 import life.aaatao.forum.mapper.UserMapper;
@@ -29,7 +30,9 @@ public class IndexController {
 
     @GetMapping("/")
     public String hello(HttpServletRequest request,
-                        Model model) {
+                        Model model,
+                        @RequestParam(name = "page",defaultValue = "1") Integer page,
+                        @RequestParam(name = "size",defaultValue = "5") Integer size) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length != 0)
             for (Cookie cookie : cookies) {
@@ -42,8 +45,8 @@ public class IndexController {
                     break;
                 }
             }
-        List<QuestionDTO> questionList= questionService.list();
-        model.addAttribute("questions", questionList);
+        PaginationDTO pagination= questionService.list(page,size);
+        model.addAttribute("pagination", pagination);
         return "index";
     }
 }
