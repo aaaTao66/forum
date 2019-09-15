@@ -8,3 +8,7 @@
 以及掘金地址: https://juejin.im/user/5d187331f265da1bc5527953
 ## 感谢
 我都是根据码匠笔记的教程进行开发的, 大家可以关注 -微信公众号: 码匠笔记
+
+## 另外
+MyBatis Generator:
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate

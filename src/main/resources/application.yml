@@ -3,7 +3,7 @@ spring:
     password: root
     username: root
     url: jdbc:mysql://localhost:3306/forum?serverTimezone=UTC
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

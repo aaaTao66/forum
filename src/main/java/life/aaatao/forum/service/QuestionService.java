@@ -1,11 +1,14 @@
 package life.aaatao.forum.service;
 
 import life.aaatao.forum.domain.Question;
+import life.aaatao.forum.domain.QuestionExample;
 import life.aaatao.forum.domain.User;
 import life.aaatao.forum.dto.PaginationDTO;
 import life.aaatao.forum.dto.QuestionDTO;
+import life.aaatao.forum.exception.CustomizeException;
 import life.aaatao.forum.mapper.QuestionMapper;
 import life.aaatao.forum.mapper.UserMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +29,7 @@ public class QuestionService {
         // size*(page - 1)
 
         PaginationDTO paginationDTO = new PaginationDTO();
-        Integer totalCount = questionMapper.count();
+        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         Integer totalPage;
 
         if (totalCount % size == 0) {
@@ -47,10 +50,10 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage, page);
         //
         Integer offset = size * (page - 1);
-        List<Question> questions = questionMapper.list(offset, size);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
-            User user = userMapper.findById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             // 快速把第一个对象上的属性,拷贝到第二个参数对象上面
             BeanUtils.copyProperties(question, questionDTO);
@@ -65,8 +68,11 @@ public class QuestionService {
     public PaginationDTO listByUserId(Integer userId, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
 
-        Integer totalCount = questionMapper.countByUserId(userId);
         Integer totalPage;
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.createCriteria()
+                .andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(questionExample);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
@@ -86,10 +92,15 @@ public class QuestionService {
         paginationDTO.setPagination(totalPage, page);
 
         Integer offset = size * (page - 1);
-        List<Question> questions = questionMapper.listByUserId(userId, offset, size);
+
+        QuestionExample ex = new QuestionExample();
+        ex.createCriteria()
+                .andCreatorEqualTo(userId);
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(ex, new RowBounds(offset, size));
+
         List<QuestionDTO> questionDTOList = new ArrayList<>();
         for (Question question : questions) {
-            User user = userMapper.findById(question.getCreator());
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             // 快速把第一个对象上的属性,拷贝到第二个参数对象上面
             BeanUtils.copyProperties(question, questionDTO);
@@ -102,11 +113,13 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException("问题不存在或已被删除!");
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
-
-        User user = userMapper.findById(question.getCreator());
+        User user = userMapper.selectByPrimaryKey(question.getCreator());
         questionDTO.setUser(user);
         return questionDTO;
     }
@@ -116,10 +129,24 @@ public class QuestionService {
             // 创建
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.create(question);
+            questionMapper.insert(question);
         } else {
-            question.setGmtModified(question.getGmtCreate());
-            questionMapper.update(question);
+            Question updateQuestion = new Question();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+            QuestionExample example = new QuestionExample();
+            example.createCriteria()
+                    .andIdEqualTo(question.getId());
+            questionMapper.updateByExample(updateQuestion, example);
         }
+    }
+
+    public void incView(Integer id) {
+/*        questionMapper.
+        Question updateQuestion = new Question();
+        updateQuestion.setViewCount();
+        questionMapper.update(updateQuestion);*/
     }
 }
