@@ -6,6 +6,7 @@ import life.aaatao.forum.domain.User;
 import life.aaatao.forum.dto.PaginationDTO;
 import life.aaatao.forum.dto.QuestionDTO;
 import life.aaatao.forum.exception.CustomizeException;
+import life.aaatao.forum.mapper.QuestionExtMapper;
 import life.aaatao.forum.mapper.QuestionMapper;
 import life.aaatao.forum.mapper.UserMapper;
 import org.apache.ibatis.session.RowBounds;
@@ -21,6 +22,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -144,9 +148,10 @@ public class QuestionService {
     }
 
     public void incView(Integer id) {
-/*        questionMapper.
-        Question updateQuestion = new Question();
-        updateQuestion.setViewCount();
-        questionMapper.update(updateQuestion);*/
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
+
     }
 }
