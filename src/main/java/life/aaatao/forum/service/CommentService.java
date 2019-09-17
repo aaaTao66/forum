@@ -10,6 +10,7 @@ import life.aaatao.forum.mapper.QuestionExtMapper;
 import life.aaatao.forum.mapper.QuestionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
@@ -23,6 +24,8 @@ public class CommentService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+
+    @Transactional // 让这个方法处于一个事务, 如果里面的 insert/incCommentCount 出现错误,将全部回滚
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
