@@ -139,6 +139,7 @@ public class QuestionService {
             question.setCommentCount(0);
             questionMapper.insert(question);
         } else {
+            // 更新
             Question updateQuestion = new Question();
             updateQuestion.setGmtModified(System.currentTimeMillis());
             updateQuestion.setTitle(question.getTitle());
@@ -147,7 +148,7 @@ public class QuestionService {
             QuestionExample example = new QuestionExample();
             example.createCriteria()
                     .andIdEqualTo(question.getId());
-            questionMapper.updateByExample(updateQuestion, example);
+            questionMapper.updateByExampleSelective(updateQuestion, example);
         }
     }
 

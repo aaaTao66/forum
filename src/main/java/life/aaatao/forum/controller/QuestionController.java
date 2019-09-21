@@ -1,8 +1,8 @@
 package life.aaatao.forum.controller;
 
-import life.aaatao.forum.dto.CommentCreateDTO;
 import life.aaatao.forum.dto.CommentDTO;
 import life.aaatao.forum.dto.QuestionDTO;
+import life.aaatao.forum.enums.CommentTypeEnum;
 import life.aaatao.forum.service.CommentService;
 import life.aaatao.forum.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class QuestionController {
     public String question(@PathVariable(name = "id") Long id,Model model) {
         QuestionDTO questionDTO = questionService.getById(id);
 
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTargetId(id, CommentTypeEnum.QUESTION);
 
         // 累计阅读数
         questionService.incView(id);
