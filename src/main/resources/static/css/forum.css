@@ -27,6 +27,10 @@ body {
     color: #999;
 }
 
+.question-tag {
+    margin-right: 5px;
+}
+
 .profile .section {
     margin-top: 15px;
 }
