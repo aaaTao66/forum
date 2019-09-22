@@ -31,6 +31,14 @@ body {
     margin-right: 5px;
 }
 
+.question-related {
+    line-height: 20px;
+    font-size: 14px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
+}
+
 .profile .section {
     margin-top: 15px;
 }
@@ -46,6 +54,10 @@ body {
 
 .comment {
     margin: 10px 0;
+}
+
+.comment-count {
+    margin-top: 10px;
 }
 
 .btn-comment {
