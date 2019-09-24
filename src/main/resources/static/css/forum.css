@@ -91,7 +91,7 @@ body {
     cursor: pointer;
 }
 
-.menu .comment-icon :hover{
+.menu .comment-icon :hover {
     font-size: 17px;
     cursor: pointer;
 }
@@ -112,5 +112,15 @@ body {
 
 .question-title {
     margin-top: 30px;
+}
+
+.publish-tag-tab {
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+
+.publish-tag-tab .label-info {
+    margin-right: 10px;
 }
 

@@ -2,38 +2,6 @@ function post() {
     var questionId = $("#question_id").val();
     var content = $("#comment_content").val();
     comment2target(questionId, 1, content);
-
-    /*    if (!content) {
-            alert("回复内容不能为空");
-            return;
-        }
-        $.ajax({
-            type: "POST",
-            url: "/comment",
-            contentType: 'application/json',
-            data: JSON.stringify({
-                "parentId": questionId,
-                "content": content,
-                "type": 1
-            }),
-            success: function (response) {
-                if (response.code == 200) {
-                    location.reload();
-                } else {
-                    if (response.code == 2003) {
-                        var isAccepted = confirm(response.message);
-                        if (isAccepted) {
-                            window.open("https://github.com/login/oauth/authorize?client_id=77b1cf12c9c9896fa264&redirect_uri=http://localhost:1212/callback&scope=user&state=1");
-                            window.localStorage.setItem("closable", true);
-                        }
-                    } else {
-                        alert(response.message);
-                    }
-                }
-                console.log(response);
-            },
-            dataType: "json"
-        });*/
 }
 
 function comment2target(targetId, type, content) {
@@ -143,3 +111,21 @@ function collapseComments(e) {
         }
     }
 }
+
+function showSelectTag() {
+    $("#select-tag").show()
+}
+
+function selectTag(e) {
+    var value = e.getAttribute("data-tag");
+    var previous = $("#tag").val();
+    if (previous.indexOf(value) == -1) {
+        if (previous) {
+            $("#tag").val(previous + ',' + value);
+        } else {
+            $("#tag").val(value);
+        }
+    }
+}
+
+

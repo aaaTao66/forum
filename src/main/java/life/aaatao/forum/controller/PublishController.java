@@ -1,11 +1,13 @@
 package life.aaatao.forum.controller;
 
+import life.aaatao.forum.cache.TagCache;
 import life.aaatao.forum.domain.Question;
 import life.aaatao.forum.domain.User;
 import life.aaatao.forum.dto.QuestionDTO;
 import life.aaatao.forum.mapper.QuestionMapper;
 import life.aaatao.forum.mapper.UserMapper;
 import life.aaatao.forum.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,12 +33,14 @@ public class PublishController {
         model.addAttribute("description", question.getDescription());
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id", question.getId());
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
 
     @GetMapping("/publish")
-    public String publish() {
+    public String publish(Model model) {
+        model.addAttribute("tags", TagCache.get());
         return "publish";
     }
 
@@ -66,12 +70,22 @@ public class PublishController {
             model.addAttribute("error","标签不能为空");
             return "publish";
         }
+
+        String invalid = TagCache.filterInvalid(tag);
+
+        if (StringUtils.isNotBlank(invalid)) {
+            model.addAttribute("error", "输入非法标签:"+invalid);
+            return "publish";
+        }
+
         User user = (User) request.getSession().getAttribute("user");
 
         if (user == null) {
             model.addAttribute("error", "用户未登录");
             return "publish";
         }
+
+
         Question question = new Question();
         question.setTitle(title);
         question.setDescription(description);
