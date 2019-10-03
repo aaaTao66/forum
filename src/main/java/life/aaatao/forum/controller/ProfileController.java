@@ -2,6 +2,7 @@ package life.aaatao.forum.controller;
 
 import life.aaatao.forum.domain.User;
 import life.aaatao.forum.dto.PaginationDTO;
+import life.aaatao.forum.service.NotificationService;
 import life.aaatao.forum.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,9 @@ public class ProfileController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action,
                           Model model,
@@ -32,15 +36,20 @@ public class ProfileController {
             return "redirect:/";
         }
 
-        if ("questions".equals(action)) {
-            model.addAttribute("section", "questions");
+        if ("data".equals(action)) {
+            model.addAttribute("section", "data");
             model.addAttribute("sectionName", "我的提问");
+            PaginationDTO paginationDTO = questionService.listByUserId(user.getId(), page, size);
+            model.addAttribute("pagination", paginationDTO);
         } else if ("replies".equals(action)) {
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
             model.addAttribute("section", "replies");
+            model.addAttribute("pagination", paginationDTO);
+            model.addAttribute("unreadCount", unreadCount);
             model.addAttribute("sectionName", "最新回复");
         }
-        PaginationDTO paginationDTO = questionService.listByUserId(user.getId(), page, size);
-        model.addAttribute("pagination", paginationDTO);
+
         return "profile";
     }
 }
