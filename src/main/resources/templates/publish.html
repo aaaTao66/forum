@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="/css/forum.css">
+    <link rel="stylesheet" href="/css/editormd.min.css">
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
     <script src="/js/forum.js" type="application/javascript"></script>
+    <script src="/js/editormd.min.js" type="application/javascript"></script>
 </head>
 <body>
 
@@ -27,21 +29,37 @@
                            placeholder="问题标题...."
                            autocomplete="off">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="question-editor">
                     <label for="description">问题补充 (必填,请参照右侧提示) :</label>
-                    <textarea id="description" class="form-control" th:text="${description}" name="description"
-                              cols="30" rows="10" placeholder="重要的堆栈信息,代码,以及你时如何触发的错误,想要实现什么功能..."></textarea>
+                    <textarea id="description" class="form-control" th:text="${description}"
+                              style="display: none;"
+                              name="description"
+                              cols="30" rows="10" placeholder="问题详情..."></textarea>
                 </div>
+                <script type="text/javascript">
+                    $(function () {
+                        var editor = editormd("question-editor", {
+                            width: "100%",
+                            height: 350,
+                            path: "/js/lib/",
+                            delay: 0,
+                            watch: false,
+                            placeholder: "请输入问题描述(Markdown 格式)"
+                        });
+                    });
+                </script>
 
                 <div class="form-group">
                     <label for="tag">添加标签 :</label>
                     <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"
                            placeholder="输入标签,以逗号分隔 (Java,Spring,Mysql....):"
                            autocomplete="off"
-                           onclick="showSelectTag()">
+                           onclick="showSelectTag();">
+
                     <div th:id="select-tag" class="publish-tag-tab">
                         <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" th:each="selectCategory,selectCategoryStat : ${tags}" th:class="${selectCategoryStat.first ? 'active':''}">
+                            <li role="presentation" th:each="selectCategory,selectCategoryStat : ${tags}"
+                                th:class="${selectCategoryStat.first ? 'active':''}">
                                 <a th:href="${'#'+selectCategory.categoryName}" aria-controls="home" role="tab"
                                    data-toggle="tab" th:text="${selectCategory.categoryName}">
                                 </a>

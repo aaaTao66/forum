@@ -1,14 +1,12 @@
 package life.aaatao.forum.cache;
 
 import life.aaatao.forum.dto.TagDTO;
-import lombok.experimental.Tolerate;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class TagCache {
 
